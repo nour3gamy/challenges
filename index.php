@@ -183,6 +183,7 @@ echo match (true) {
     defualt =>  'Enter the right grade of you'
 };
 }
+getGrade(88);
 
 function getShippingCost($country){
 echo match ($country) {
@@ -193,6 +194,7 @@ echo match ($country) {
     defualt=>  200,
 };
 }
+getShippingCost('Egypt');
 
 function getOrderMessage($status){
 echo match($status){
@@ -203,6 +205,7 @@ echo match($status){
     defualt=>'unknown order status'
 };
 }
+getOrderMessage('pending');
 
 function calculateTicketPrice($age,$day){
     if($age<=0) {
@@ -253,21 +256,105 @@ function weatherRecommendation($temperature,$weather){
         else echo 'hot, ' ;
     switch($weather){
         case 'sunny':
-            echo "Don't forget your sunglasses or sunscreen.";
+            echo "Don't forget your sunglasses or sunscreen.<br>";
             break;
         case 'rainy':
-            echo "Bring an umbrella or waterproof raincoat with you.";
+            echo "Bring an umbrella or waterproof raincoat with you.<br>";
             break;
         case 'snowy':
-            echo "Watch out for slippery roads and wear warm boots.";
+            echo "Watch out for slippery roads and wear warm boots.<br>";
             break;
         case 'windy':
-            echo "Hold onto lightweight items and consider a windbreaker.";
+            echo "Hold onto lightweight items and consider a windbreaker.<br>";
             break;
         default:
-            echo "Check conditions before heading out.";
+            echo "Check conditions before heading out.<br>";
     }
 }
 weatherRecommendation(20,'sunny');
 
-//Challenge 19
+function processOrder($total,$paymentMethod,$customerType){
+switch($paymentMethod){
+    case 'cash':
+        echo "Cash has No Discount.!, Total = $total<br>";
+    break;
+    case 'credit':
+    match($customerType){
+        'vip'=>$dis=0.15,
+        'stander'=>$dis=0
+    };
+    if($customerType=='stander') {
+        echo "No Discount.!, Total = $total<br>";
+        return;
+    }
+    else {
+        $total=$total+$total*$dis;
+        echo "Total = $total<br>" ;
+    }
+    break;
+    }
+}
+processOrder(900,'cash','vip');
+processOrder(900,'credit','vip');
+processOrder(900,'credit','stander');
+
+function checkAccess($username,$role,$isActive){
+    if(!$isActive) {
+        echo "Access Denied: Account for $username is inactive.<br>";
+        return ;
+    }
+    match($role){
+        'admin'      => 'Full Read/Write/Delete Access',
+        'editor'     => 'Read/Write Access',
+        'subscriber' => 'Read-Only Access',
+        default      => 'No Permissions Assigned'
+    };
+    switch($role){
+        case 'admin':
+            $roleLabel = "Administrator";
+        break;
+        case 'editor':
+            $roleLabel = "Content Editor";
+        break;
+        case 'subscriber':
+            $roleLabel = "Subscriber";
+        break;
+        default : $roleLabel = "Unknown Role ($role)";
+    }
+    echo "Access Granted for $username | Role: $roleLabel | Permissions: $role <br>";
+}
+checkAccess('Alice', 'admin', true);
+checkAccess('Bob', 'editor', true);
+checkAccess('Charlie', 'subscriber', false);
+checkAccess('Dave', 'guest', true);
+
+function calculateOrder($category,$item,$quantity){
+    switch($category){
+        case 'electronics':
+            $categoryName = "Electronics";
+            break;
+        case 'clothing':
+            $categoryName = "Clothing";
+            break;
+        case 'books':
+            $categoryName = "Books";
+            break;
+        default:
+            return "Error: The selected category ($category) is not supported.";
+    }
+    $itemPrice =match($item){
+        'laptop'   => 1200.0,
+        'phone'    => 800.0,
+        'headset'  => 150.0,
+        'shirt'    => 40.0,
+        'pants'    => 60.0,
+        'shoes'    => 100.0,
+        'novel'    => 15.0,
+        'textbook' => 80.0,
+        default    => null,
+    };
+    if(!itemPrice){
+        echo "Error: Item ($item) is not available under the $categoryName category.";
+    }
+
+}
